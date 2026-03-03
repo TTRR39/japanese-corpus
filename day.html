@@ -3,11 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>当日语料</title>
+  <style>
+    body { font-family: Arial; max-width: 800px; margin: 40px auto; }
+    input { width: 100%; padding: 8px; margin-bottom: 20px; }
+    .entry { border-bottom: 1px solid #ccc; padding: 10px 0; }
+  </style>
 </head>
 <body>
 
+<a href="index.html">← 返回首页</a>
+
 <h1 id="title"></h1>
-<input type="text" id="search" placeholder="搜索...">
+
+<h2>🔍 当日搜索</h2>
+<input type="text" id="search" placeholder="搜索当天语料...">
+
 <div id="results"></div>
 
 <script src="data.js"></script>
@@ -21,34 +31,42 @@ document.getElementById("title").textContent = date;
 const searchInput = document.getElementById("search");
 const resultsDiv = document.getElementById("results");
 
+// 只获取当天数据
 let dayData = corpus.filter(entry => entry.date === date);
 
 function render(data) {
   resultsDiv.innerHTML = "";
+
   data.forEach(entry => {
     const div = document.createElement("div");
+    div.className = "entry";
     div.innerHTML = `
       <strong>${entry.word}</strong>（${entry.reading}）<br>
       意思：${entry.meaning}<br>
-      例句：${entry.example}<br><br>
+      例句：${entry.example}
     `;
     resultsDiv.appendChild(div);
   });
 }
 
+// 当日搜索
 searchInput.addEventListener("input", function() {
   const keyword = this.value;
+
   const filtered = dayData.filter(entry =>
     entry.word.includes(keyword) ||
     entry.reading.includes(keyword) ||
     entry.meaning.includes(keyword) ||
     entry.example.includes(keyword)
   );
+
   render(filtered);
 });
 
+// 默认显示全部当天内容
 render(dayData);
 
 </script>
+
 </body>
 </html>
