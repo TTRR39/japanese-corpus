@@ -1,30 +1,16 @@
-const searchInput = document.getElementById("search");
 const resultsDiv = document.getElementById("results");
 
-function render(data) {
-  resultsDiv.innerHTML = "";
-  data.forEach(entry => {
-    const div = document.createElement("div");
-    div.className = "entry";
-    div.innerHTML = `
-      <strong>${entry.word}</strong>（${entry.reading}）<br>
-      意思：${entry.meaning}<br>
-      例句：${entry.example}
-    `;
-    resultsDiv.appendChild(div);
-  });
-}
+// 获取所有不重复日期
+const dates = [...new Set(corpus.map(entry => entry.date))];
 
-searchInput.addEventListener("input", function() {
-  const keyword = this.value.toLowerCase();
-  const filtered = corpus.filter(entry =>
-    entry.word.includes(keyword) ||
-    entry.reading.includes(keyword) ||
-    entry.meaning.includes(keyword) ||
-    entry.example.includes(keyword)
-  );
-  render(filtered);
+// 按时间倒序
+dates.sort().reverse();
+
+dates.forEach(date => {
+  const link = document.createElement("a");
+  link.href = `day.html?date=${date}`;
+  link.textContent = date;
+  link.style.display = "block";
+  link.style.margin = "10px 0";
+  resultsDiv.appendChild(link);
 });
-
-// 初始显示全部
-render(corpus);
