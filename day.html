@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>当日语料</title>
+</head>
+<body>
+
+<h1 id="title"></h1>
+<input type="text" id="search" placeholder="搜索...">
+<div id="results"></div>
+
+<script src="data.js"></script>
+<script>
+
+const urlParams = new URLSearchParams(window.location.search);
+const date = urlParams.get("date");
+
+document.getElementById("title").textContent = date;
+
+const searchInput = document.getElementById("search");
+const resultsDiv = document.getElementById("results");
+
+let dayData = corpus.filter(entry => entry.date === date);
+
+function render(data) {
+  resultsDiv.innerHTML = "";
+  data.forEach(entry => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <strong>${entry.word}</strong>（${entry.reading}）<br>
+      意思：${entry.meaning}<br>
+      例句：${entry.example}<br><br>
+    `;
+    resultsDiv.appendChild(div);
+  });
+}
+
+searchInput.addEventListener("input", function() {
+  const keyword = this.value;
+  const filtered = dayData.filter(entry =>
+    entry.word.includes(keyword) ||
+    entry.reading.includes(keyword) ||
+    entry.meaning.includes(keyword) ||
+    entry.example.includes(keyword)
+  );
+  render(filtered);
+});
+
+render(dayData);
+
+</script>
+</body>
+</html>
